@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:milk_man_app/core/models/order.dart';
 import 'package:milk_man_app/core/models/order_status.dart';
 import 'package:milk_man_app/core/providers/repository_provider.dart';
+import 'package:milk_man_app/ui/utils/dates.dart';
 import 'package:milk_man_app/ui/utils/utils.dart';
 import 'package:milk_man_app/ui/widgets/tow_text_row.dart';
 
@@ -20,101 +21,112 @@ class OrderDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Order Details'),
       ),
-      bottomNavigationBar: Material(
-        color: theme.cardColor,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
-          child: Row(
-            children: [
-              order.status != OrderStatus.cancelled
-                  ? Expanded(
-                      child: MaterialButton(
-                        color: theme.accentColor,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(
-                                "Are you sure you want set as cancelled?",
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("NO"),
-                                ),
-                                MaterialButton(
-                                  color: theme.accentColor,
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    context
-                                        .read(repositoryProvider)
-                                        .setOrderAsCancelled(
-                                          id: order.id,
-                                          customerId: order.customerId,
-                                          totalAmount:
-                                              order.total + order.walletAmount,
-                                        );
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("YES"),
-                                ),
-                              ],
+      bottomNavigationBar: order.deliveryDate.isAfter(Dates.today) &&
+              order.deliveryDate.isBefore(
+                Dates.today.add(
+                  Duration(
+                    hours: 23,
+                    minutes: 59,
+                  ),
+                ),
+              )
+          ? Material(
+              color: theme.cardColor,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                child: Row(
+                  children: [
+                    order.status != OrderStatus.cancelled
+                        ? Expanded(
+                            child: MaterialButton(
+                              color: theme.accentColor,
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(
+                                      "Are you sure you want set as ${order.status == OrderStatus.delivered?"returned":"cancelled"}?",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("NO"),
+                                      ),
+                                      MaterialButton(
+                                        color: theme.accentColor,
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          context
+                                              .read(repositoryProvider)
+                                              .setOrderAsCancelled(
+                                                id: order.id,
+                                                customerId: order.customerId,
+                                                totalAmount: order.total +
+                                                    order.walletAmount,
+                                              );
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("YES"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              child: Text(order.status == OrderStatus.delivered?"RETURN":"CANCEL"),
                             ),
-                          );
-                        },
-                        child: Text("CANCEL"),
-                      ),
-                    )
-                  : SizedBox(),
-              SizedBox(
-                width: order.status != OrderStatus.cancelled &&
-                        order.status != OrderStatus.delivered
-                    ? 8
-                    : 0,
+                          )
+                        : SizedBox(),
+                    SizedBox(
+                      width: order.status != OrderStatus.cancelled &&
+                              order.status != OrderStatus.delivered
+                          ? 8
+                          : 0,
+                    ),
+                    order.status != OrderStatus.delivered
+                        ? Expanded(
+                            child: MaterialButton(
+                              child: Text("DELIVER"),
+                              color: theme.accentColor,
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(
+                                      "Are you sure you want set as delivered?",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("NO"),
+                                      ),
+                                      MaterialButton(
+                                        color: theme.accentColor,
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          context
+                                              .read(repositoryProvider)
+                                              .setOrderAsDelivered(order.id);
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("YES"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : SizedBox(),
+                  ],
+                ),
               ),
-              order.status != OrderStatus.delivered
-                  ? Expanded(
-                      child: MaterialButton(
-                        child: Text("DELIVER"),
-                        color: theme.accentColor,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(
-                                "Are you sure you want set as delivered?",
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("NO"),
-                                ),
-                                MaterialButton(
-                                  color: theme.accentColor,
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    context
-                                        .read(repositoryProvider)
-                                        .setOrderAsDelivered(order.id);
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("YES"),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    )
-                  : SizedBox(),
-            ],
-          ),
-        ),
-      ),
+            )
+          : SizedBox(),
       body: ListView(
         padding: EdgeInsets.all(4),
         children: [

@@ -43,7 +43,7 @@ class Repository {
 
   Stream<List<Subscription>> get subscriptionsStream => _firestore
       .collection('subscription')
-      .where('milkManId', isEqualTo: user.phoneNumber)
+      .where('milkManId', isEqualTo: user.phoneNumber!.split("+91").last)
       .where(
         'startDate',
         isGreaterThanOrEqualTo: Dates.today.subtract(

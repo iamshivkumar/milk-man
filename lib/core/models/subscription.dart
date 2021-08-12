@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:milk_man_app/core/models/delivery.dart';
+import 'package:milk_man_app/core/models/delivery_address.dart';
 
 import 'package:milk_man_app/core/models/option.dart';
 
@@ -17,7 +18,7 @@ class Subscription {
   final DateTime endDate;
   final String deliveryDay;
   final String milkManId;
-  // final List<DateTime> dates;
+  final DeliveryAddress address;
   final List<Delivery> deliveries;
 
   Subscription({
@@ -35,6 +36,7 @@ class Subscription {
     required this.deliveries,
     required this.milkManId,
     required this.image,
+    required this.address,
   });
 
   Subscription copyWith({
@@ -51,6 +53,7 @@ class Subscription {
     String? customerName,
     String? customerMobile,
     String? image,
+    DeliveryAddress? address,
   }) {
     return Subscription(
       id: this.id,
@@ -67,6 +70,7 @@ class Subscription {
       customerName: customerName ?? this.customerName,
       customerMobile: customerMobile ?? this.customerMobile,
       image: image ?? this.image,
+      address: address??this.address,
     );
   }
 
@@ -84,7 +88,8 @@ class Subscription {
       // 'dates': dates.map((e) => Timestamp.fromDate(e)).toList(),
       'deliveries': deliveries.map((e) => e.toMap()).toList(),
       'image': image,
-      'milkManId': milkManId
+      'milkManId': milkManId,
+      'address':address.toMap()
     };
   }
 
@@ -108,6 +113,7 @@ class Subscription {
           .toList(),
       milkManId: map['milkManId'],
       image: map['image'],
+      address: DeliveryAddress.fromMap(map['address'])
     );
   }
 
