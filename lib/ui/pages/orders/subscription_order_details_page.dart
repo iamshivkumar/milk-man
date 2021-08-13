@@ -8,6 +8,7 @@ import 'package:milk_man_app/core/models/subscription.dart';
 import 'package:milk_man_app/core/providers/repository_provider.dart';
 import 'package:milk_man_app/ui/pages/customers/providers/customer_provider.dart';
 import 'package:milk_man_app/ui/pages/customers/widgets/add_wallet_amount_sheet.dart';
+import 'package:milk_man_app/ui/pages/profile/providers/profile_provider.dart';
 import 'package:milk_man_app/ui/utils/dates.dart';
 import 'package:milk_man_app/ui/utils/labels.dart';
 import 'package:milk_man_app/ui/utils/utils.dart';
@@ -29,6 +30,7 @@ class SubscriptionOrderDetailsPage extends ConsumerWidget {
     final style = theme.textTheme;
     final customerStream = watch(customerProvider(order.customerId));
     final repository = context.read(repositoryProvider);
+    final profile = context.read(profileProvider).data!.value;
     return Scaffold(
       appBar: AppBar(
         title: Text('Subscription Order Details'),
@@ -66,6 +68,9 @@ class SubscriptionOrderDetailsPage extends ConsumerWidget {
                                           Navigator.pop(context);
                                           if (delivery.status ==
                                               OrderStatus.delivered) {
+                                            repository.returnSubscriptionOrder(
+                                                id: profile.id,
+                                                subscription: order);
                                           } else {
                                             order.deliveries
                                                 .where((element) =>
@@ -124,7 +129,9 @@ class SubscriptionOrderDetailsPage extends ConsumerWidget {
                                         onPressed: () {
                                           Navigator.pop(context);
                                           repository.deliverSubscriptionOrder(
-                                              subscription: order);
+                                            subscription: order,
+                                            id: profile.id,
+                                          );
                                           Navigator.pop(context);
                                         },
                                         child: Text("YES"),
