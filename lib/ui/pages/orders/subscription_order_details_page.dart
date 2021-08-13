@@ -1,38 +1,39 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:milk_man_app/core/models/delivery.dart';
 
-import 'package:milk_man_app/core/models/order.dart';
 import 'package:milk_man_app/core/models/order_status.dart';
+import 'package:milk_man_app/core/models/subscription.dart';
 import 'package:milk_man_app/core/providers/repository_provider.dart';
+import 'package:milk_man_app/ui/pages/customers/providers/customer_provider.dart';
+import 'package:milk_man_app/ui/pages/customers/widgets/add_wallet_amount_sheet.dart';
 import 'package:milk_man_app/ui/utils/dates.dart';
+import 'package:milk_man_app/ui/utils/labels.dart';
 import 'package:milk_man_app/ui/utils/utils.dart';
+import 'package:milk_man_app/ui/widgets/loading.dart';
 import 'package:milk_man_app/ui/widgets/tow_text_row.dart';
 
 import 'widgets/white_card.dart';
 
-class OrderDetailsPage extends StatelessWidget {
-  final Order order;
-  const OrderDetailsPage({Key? key, required this.order}) : super(key: key);
+class SubscriptionOrderDetailsPage extends ConsumerWidget {
+  final Subscription order;
+  final Delivery delivery;
+  const SubscriptionOrderDetailsPage(
+      {Key? key, required this.order, required this.delivery})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
     final theme = Theme.of(context);
     final style = theme.textTheme;
+    final customerStream = watch(customerProvider(order.customerId));
     final repository = context.read(repositoryProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order Details'),
+        title: Text('Subscription Order Details'),
       ),
-      bottomNavigationBar: order.deliveryDate.isAfter(Dates.today) &&
-              order.deliveryDate.isBefore(
-                Dates.today.add(
-                  Duration(
-                    hours: 23,
-                    minutes: 59,
-                  ),
-                ),
-              )
+      bottomNavigationBar: delivery.date == Dates.today
           ? Material(
               color: theme.cardColor,
               child: Padding(
@@ -40,8 +41,8 @@ class OrderDetailsPage extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
                 child: Row(
                   children: [
-                    order.status != OrderStatus.cancelled &&
-                            order.status != OrderStatus.returned
+                    delivery.status != OrderStatus.cancelled &&
+                            delivery.status != OrderStatus.returned
                         ? Expanded(
                             child: MaterialButton(
                               color: theme.accentColor,
@@ -50,7 +51,7 @@ class OrderDetailsPage extends StatelessWidget {
                                   context: context,
                                   builder: (context) => AlertDialog(
                                     title: Text(
-                                      "Are you sure you want set as ${order.status == OrderStatus.delivered ? "returned" : "cancelled"}?",
+                                      "Are you sure you want set as ${delivery.status == OrderStatus.delivered ? "returned" : "cancelled"}?",
                                     ),
                                     actions: [
                                       TextButton(
@@ -63,21 +64,18 @@ class OrderDetailsPage extends StatelessWidget {
                                         color: theme.accentColor,
                                         onPressed: () {
                                           Navigator.pop(context);
-                                          if (order.status ==
+                                          if (delivery.status ==
                                               OrderStatus.delivered) {
-                                            repository.setOrderAsReturned(
-                                              id: order.id,
-                                              customerId: order.customerId,
-                                              totalAmount: order.total +
-                                                  order.walletAmount,
-                                            );
                                           } else {
-                                            repository.setOrderAsCancelled(
-                                              id: order.id,
-                                              customerId: order.customerId,
-                                              totalAmount: order.total +
-                                                  order.walletAmount,
-                                            );
+                                            order.deliveries
+                                                .where((element) =>
+                                                    element.date ==
+                                                    delivery.date)
+                                                .first
+                                                .status = OrderStatus.cancelled;
+                                            repository.saveDeliveries(
+                                                id: order.id,
+                                                deliveries: order.deliveries);
                                           }
                                           Navigator.pop(context);
                                         },
@@ -87,19 +85,22 @@ class OrderDetailsPage extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: Text(order.status == OrderStatus.delivered
-                                  ? "RETURN"
-                                  : "CANCEL"),
+                              child: Text(
+                                  delivery.status == OrderStatus.delivered
+                                      ? "RETURN"
+                                      : "CANCEL"),
                             ),
                           )
                         : SizedBox(),
                     SizedBox(
-                      width: order.status != OrderStatus.cancelled &&
-                              order.status != OrderStatus.delivered
+                      width: delivery.status != OrderStatus.cancelled &&
+                              delivery.status != OrderStatus.delivered
                           ? 8
                           : 0,
                     ),
-                    order.status != OrderStatus.delivered
+                    delivery.status != OrderStatus.delivered &&
+                            (delivery.quantity * order.option.salePrice) <
+                                (customerStream.data?.value.walletAmount ?? 0)
                         ? Expanded(
                             child: MaterialButton(
                               child: Text("DELIVER"),
@@ -122,8 +123,8 @@ class OrderDetailsPage extends StatelessWidget {
                                         color: theme.accentColor,
                                         onPressed: () {
                                           Navigator.pop(context);
-                                          repository
-                                              .setOrderAsDelivered(order.id);
+                                          repository.deliverSubscriptionOrder(
+                                              subscription: order);
                                           Navigator.pop(context);
                                         },
                                         child: Text("YES"),
@@ -150,72 +151,90 @@ class OrderDetailsPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Products',
+                    'Product',
                     style: style.headline6,
                   ),
                 ),
-                Column(
-                  children: order.products.map((e) {
-                    return ListTile(
-                      title: Text(e.name),
-                      leading: Image.network(e.image),
-                      subtitle: Text(
-                          e.qt.toString() + " Items x ₹" + e.price.toString()),
-                      trailing: Text(
-                        "₹" + (e.qt * e.price).toString(),
+                ListTile(
+                  title: RichText(
+                    text: TextSpan(
+                      text: order.productName + " ",
+                      style: style.subtitle1,
+                      children: [
+                        TextSpan(
+                          text: "(${order.option.amountLabel})",
+                          style: style.subtitle1!.copyWith(
+                            color: style.caption!.color,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  leading: Image.network(order.image),
+                  subtitle: Text(delivery.quantity.toString() +
+                      " Items x " +
+                      order.option.salePriceLabel),
+                  trailing: Text(
+                    "₹" +
+                        (delivery.quantity * order.option.salePrice).toString(),
+                  ),
+                )
+              ],
+            ),
+          ),
+          WhiteCard(
+            child: customerStream.when(
+              data: (customer) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Customer Details',
+                      style: style.headline6,
+                    ),
+                  ),
+                  TwoTextRow(
+                    text1: "Name",
+                    text2: order.customerName,
+                  ),
+                  TwoTextRow(
+                    text1: "Phone Number",
+                    text2: order.customerMobile,
+                  ),
+                  TwoTextRow(
+                    text1: "Wallet Amount",
+                    text2:
+                        "${Labels.rupee}${customer.walletAmount.toInt().toString()}",
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: MaterialButton(
+                      color: theme.accentColor,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.add),
+                          SizedBox(width: 8),
+                          Text("Wallet Amount"),
+                        ],
                       ),
-                    );
-                  }).toList(),
-                )
-              ],
-            ),
-          ),
-          WhiteCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Order Summary',
-                    style: style.headline6,
+                      onPressed: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) =>
+                              AddWalletAmountSheet(customer.id),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                TwoTextRow(
-                  text1: "Items (6)",
-                  text2: '₹' + order.price.toString(),
-                ),
-                TwoTextRow(
-                  text1: "Wallet Amount",
-                  text2: '₹' + order.walletAmount.toString(),
-                ),
-                TwoTextRow(
-                  text1: 'Total Price',
-                  text2: '₹' + order.total.toString(),
-                )
-              ],
-            ),
-          ),
-          WhiteCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Customer Details',
-                    style: style.headline6,
-                  ),
-                ),
-                TwoTextRow(
-                  text1: "Name",
-                  text2: order.customerName,
-                ),
-                TwoTextRow(
-                  text1: "Phone Number",
-                  text2: order.customerMobile,
-                ),
-              ],
+                ],
+              ),
+              loading: () => Loading(),
+              error: (e, s) => Text(
+                e.toString(),
+              ),
             ),
           ),
           WhiteCard(
@@ -231,37 +250,15 @@ class OrderDetailsPage extends StatelessWidget {
                 ),
                 TwoTextRow(
                   text1: "Status",
-                  text2: order.status,
+                  text2: delivery.status,
                 ),
                 TwoTextRow(
                   text1: "Delivery Date",
-                  text2: Utils.formatedDate(order.deliveryDate),
+                  text2: Utils.formatedDate(delivery.date),
                 ),
                 TwoTextRow(
                   text1: "Address",
                   text2: order.address.formated,
-                ),
-              ],
-            ),
-          ),
-          WhiteCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Payment',
-                    style: style.headline6,
-                  ),
-                ),
-                TwoTextRow(
-                  text1: "Status",
-                  text2: order.paid ? "Paid" : "Not paid",
-                ),
-                TwoTextRow(
-                  text1: "Payment Method",
-                  text2: order.paymentMethod,
                 ),
               ],
             ),

@@ -63,7 +63,7 @@ class Repository {
             )
             .toList(),
       );
-      
+
   Stream<List<Customer>> get customersStream => _firestore
       .collection('users')
       .where('milkManId', isEqualTo: mobile)
@@ -86,14 +86,8 @@ class Repository {
         );
   }
 
-  void saveDeliveries(
-      {required String id, required List<Delivery> deliveries}) {
-    _firestore.collection('subscription').doc(id).update({
-      'deliveries': deliveries.map((e) => e.toMap()).toList(),
-    });
-  }
-
-  void addWalletAmount({required double amount,required String id,required String milkManId}) {
+  void addWalletAmount(
+      {required double amount, required String id, required String milkManId}) {
     final batch = _firestore.batch();
     batch.update(_firestore.collection('users').doc(id), {
       'walletAmount': FieldValue.increment(amount),
@@ -122,5 +116,59 @@ class Repository {
       "walletAmount": FieldValue.increment(totalAmount),
     });
     batch.commit();
+  }
+
+  void setOrderAsReturned(
+      {required String id,
+      required String customerId,
+      required double totalAmount}) {
+    final batch = _firestore.batch();
+    batch.update(_firestore.collection('orders').doc(id), {
+      "status": OrderStatus.returned,
+    });
+    batch.update(_firestore.collection('users').doc(customerId), {
+      "walletAmount": FieldValue.increment(totalAmount),
+    });
+    batch.commit();
+  }
+
+  Stream<Customer> customerStream(String id) {
+    return _firestore.collection("users").doc(id).snapshots().map(
+          (event) => Customer.fromFirestore(event),
+        );
+  }
+
+  void saveDeliveries(
+      {required String id, required List<Delivery> deliveries}) {
+    _firestore.collection('subscription').doc(id).update({
+      'deliveries': deliveries.map((e) => e.toMap()).toList(),
+    });
+  }
+
+  void deliverSubscriptionOrder({required Subscription subscription}) {
+    final List<Delivery> deliveries = subscription.deliveries;
+    deliveries.where((element) => element.date == Dates.today).first.status =
+        OrderStatus.delivered;
+    final _batch = _firestore.batch();
+    _batch.update(_firestore.collection('subscription').doc(subscription.id), {
+      'deliveries': deliveries.map((e) => e.toMap()).toList(),
+    });
+    final amount = deliveries
+            .where((element) => element.date == Dates.today)
+            .first
+            .quantity *
+        subscription.option.salePrice;
+    _batch.update(
+      _firestore.collection('users').doc(subscription.customerId),
+      {
+        "walletAmount": FieldValue.increment(-amount),
+      },
+    );
+    _batch.update(
+      _firestore.collection('milkMans').doc(subscription.customerId),
+      {
+        "walletAmount": FieldValue.increment(amount),
+      },
+    );
   }
 }

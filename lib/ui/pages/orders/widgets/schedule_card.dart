@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:milk_man_app/core/models/subscription.dart';
+import 'package:milk_man_app/ui/pages/orders/subscription_order_details_page.dart';
 import 'package:milk_man_app/ui/utils/labels.dart';
 
 class ScheduleCard extends StatelessWidget {
@@ -22,15 +23,15 @@ class ScheduleCard extends StatelessWidget {
 
     return Card(
       child: InkWell(
-        // onTap: () => Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => OrderDetailsPage(
-        //       key: Key(order.id),
-        //       order: order,
-        //     ),
-        //   ),
-        // ),
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SubscriptionOrderDetailsPage(
+              delivery: delivery,
+              order: subscription,
+            ),
+          ),
+        ),
         child: Column(
           children: [
             ListTile(

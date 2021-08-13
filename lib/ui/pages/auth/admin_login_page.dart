@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'providers/auth_view_model_provider.dart';
 
-class AdminLoginPage extends HookWidget {
+class LoginPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var authModel = useProvider(authViewModelProvider);
