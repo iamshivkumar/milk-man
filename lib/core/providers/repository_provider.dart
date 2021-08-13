@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:milk_man_app/core/models/customer.dart';
 import 'package:milk_man_app/core/models/delivery.dart';
+import 'package:milk_man_app/core/models/profile.dart';
 import 'package:milk_man_app/core/models/order.dart';
 import 'package:milk_man_app/core/models/order_params.dart';
 import 'package:milk_man_app/core/models/order_status.dart';
@@ -15,11 +17,14 @@ class Repository {
   FirebaseAuth _auth = FirebaseAuth.instance;
   User get user => _auth.currentUser!;
 
+  String get mobile =>
+      user.phoneNumber!.substring(user.phoneNumber!.length - 10);
+
   Stream<List<Order>> ordersStream(OrderParams params) {
     final date = params.dateTime.subtract(Duration(days: 1));
     return _firestore
         .collection('orders')
-        .where('milkManId', isEqualTo: user.phoneNumber!.split("+91").last)
+        .where('milkManId', isEqualTo: mobile)
         .where(
           'createdOn',
           isGreaterThanOrEqualTo: date,
@@ -43,7 +48,7 @@ class Repository {
 
   Stream<List<Subscription>> get subscriptionsStream => _firestore
       .collection('subscription')
-      .where('milkManId', isEqualTo: user.phoneNumber!.split("+91").last)
+      .where('milkManId', isEqualTo: mobile)
       .where(
         'startDate',
         isGreaterThanOrEqualTo: Dates.today.subtract(
@@ -58,17 +63,27 @@ class Repository {
             )
             .toList(),
       );
+      
+  Stream<List<Customer>> get customersStream => _firestore
+      .collection('users')
+      .where('milkManId', isEqualTo: mobile)
+      .snapshots()
+      .map(
+        (event) => event.docs
+            .map(
+              (e) => Customer.fromFirestore(e),
+            )
+            .toList(),
+      );
 
-  Future<List<String>> getAreas(String mobile) async {
-    final data = await _firestore
+  Stream<Profile> get profileStream {
+    return _firestore
         .collection('milkMans')
         .where('mobile', isEqualTo: mobile)
-        .get();
-    if (data.docs.isEmpty) {
-      return Future.error("Milk man not exists.");
-    } else {
-      return data.docs.first.data()['areas'].cast<String>();
-    }
+        .snapshots()
+        .map(
+          (event) => Profile.fromFirestore(event.docs.first),
+        );
   }
 
   void saveDeliveries(
@@ -78,10 +93,15 @@ class Repository {
     });
   }
 
-  void addWalletAmount({required double amount}) {
-    _firestore.collection('users').doc(user.uid).update({
+  void addWalletAmount({required double amount,required String id,required String milkManId}) {
+    final batch = _firestore.batch();
+    batch.update(_firestore.collection('users').doc(id), {
       'walletAmount': FieldValue.increment(amount),
     });
+    batch.update(_firestore.collection('milkMans').doc(milkManId), {
+      'walletAmount': FieldValue.increment(-amount),
+    });
+    batch.commit();
   }
 
   void setOrderAsDelivered(String id) {
@@ -90,7 +110,10 @@ class Repository {
     });
   }
 
-  void setOrderAsCancelled({required String id,required String customerId,required double totalAmount}) {
+  void setOrderAsCancelled(
+      {required String id,
+      required String customerId,
+      required double totalAmount}) {
     final batch = _firestore.batch();
     batch.update(_firestore.collection('orders').doc(id), {
       "status": OrderStatus.cancelled,

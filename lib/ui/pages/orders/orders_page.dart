@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:milk_man_app/core/models/delivery_address.dart';
+import 'package:milk_man_app/core/models/order.dart';
 import 'package:milk_man_app/core/models/order_params.dart';
 import 'package:milk_man_app/core/models/order_status.dart';
 import 'package:milk_man_app/ui/pages/orders/providers/calendar_view_model_provider.dart';
+import 'package:milk_man_app/ui/pages/orders/providers/filterer_view_model_provider.dart';
 import 'package:milk_man_app/ui/pages/orders/widgets/My_calendar.dart';
+import 'package:milk_man_app/ui/pages/orders/widgets/filterer.dart';
 import 'package:milk_man_app/ui/pages/orders/widgets/order_card.dart';
-import 'package:milk_man_app/ui/widgets/loading.dart';
+import 'package:milk_man_app/ui/pages/orders/widgets/schedule_card.dart';
 
 import 'providers/orders_provider.dart';
+import 'providers/subscriptions_provider.dart';
 
-class OrdersPage extends ConsumerWidget {
+class OrdersPage extends StatelessWidget {
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final style = theme.textTheme;
-    final calendarModel = watch(calendarViewModelProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Orders"),
@@ -23,51 +28,81 @@ class OrdersPage extends ConsumerWidget {
         length: OrderStatus.values.length,
         child: Column(
           children: [
-            Card(
-              margin: EdgeInsets.all(0),
-              child: Column(
-                children: [
-                  MyCalendar(
-                    model: calendarModel,
+            Consumer(
+              builder: (context, watch, child) {
+                final calendarModel = watch(calendarViewModelProvider);
+                return Card(
+                  margin: EdgeInsets.all(0),
+                  child: Column(
+                    children: [
+                      MyCalendar(
+                        model: calendarModel,
+                      ),
+                      Filterer(),
+                      TabBar(
+                        isScrollable: true,
+                        tabs: OrderStatus.values
+                            .map(
+                              (e) => Tab(
+                                text: e,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ],
                   ),
-                  TabBar(
-                    tabs: OrderStatus.values
-                        .map(
-                          (e) => Tab(
-                            text: e,
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
             Expanded(
               child: TabBarView(
                 children: OrderStatus.values
                     .map(
-                      (e) => Builder(
-                        builder: (context) {
-                          final ordersStream = watch(
-                            ordersProvider(
-                              OrderParams(
-                                status: e,
-                                dateTime: calendarModel.selectedDate,
-                              ),
-                            ),
-                          );
-                          return ordersStream.when(
-                            data: (orders) => ListView(
-                              children: orders
-                                  .map(
-                                    (o) => OrderCard(order: o),
-                                  )
-                                  .toList(),
-                            ),
-                            loading: () => Loading(),
-                            error: (e, s) => Text(
-                              e.toString(),
-                            ),
+                      (e) => Consumer(
+                        builder: (context, watch, child) {
+                          final filterer = watch(filtererViewModelProvider);
+                          final calendarModel =
+                              watch(calendarViewModelProvider);
+
+                          final orders = watch(
+                                ordersProvider(
+                                  OrderParams(
+                                    status: e,
+                                    dateTime: calendarModel.selectedDate,
+                                  ),
+                                ),
+                              ).data?.value ??
+                              [];
+                          final subscriptions = watch(subscriptionsProvider)
+                                  .data
+                                  ?.value
+                                  .where((element) => element.deliveries
+                                      .where((d) =>
+                                          d.date ==
+                                              calendarModel.selectedDate &&
+                                          d.status == e)
+                                      .isNotEmpty)
+                                  .toList() ??
+                              [];
+                          return ListView(
+                            children: (orders.cast<dynamic>() +
+                                    subscriptions.cast<dynamic>())
+                                .where((element) {
+                                  final address =
+                                      element.address as DeliveryAddress;
+                                  return address.area == filterer.area &&
+                                      address.number
+                                          .startsWith(filterer.number);
+                                })
+                                .map(
+                                  (o) => o is Order
+                                      ? OrderCard(order: o)
+                                      : ScheduleCard(
+                                          subscription: o,
+                                          dateTime: calendarModel.selectedDate,
+                                        ),
+                                )
+                                .toList(),
                           );
                         },
                       ),

@@ -11,6 +11,7 @@ class OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final style = theme.textTheme;
     return Card(
       child: InkWell(
         onTap: () => Navigator.push(
@@ -26,8 +27,10 @@ class OrderCard extends StatelessWidget {
           children: [
             ListTile(
               title: Text(order.customerName),
-              subtitle: Text(
-                order.address.formated
+              subtitle: Text(order.address.formated),
+              trailing: Text(
+                "ORDER",
+                style: style.overline,
               ),
             ),
             Padding(

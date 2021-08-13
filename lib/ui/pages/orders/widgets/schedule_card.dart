@@ -36,6 +36,10 @@ class ScheduleCard extends StatelessWidget {
             ListTile(
               title: Text(subscription.customerName),
               subtitle: Text(subscription.address.formated),
+              trailing: Text(
+                "SUBSCRIPTION",
+                style: style.overline,
+              ),
             ),
             ListTile(
               leading: Image.network(subscription.image),
