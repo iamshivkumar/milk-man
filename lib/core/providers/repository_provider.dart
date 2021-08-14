@@ -46,6 +46,28 @@ class Repository {
     );
   }
 
+  Future<List<Order>> ordersFuture(DateTime dateTime) async{
+    final date = dateTime.subtract(Duration(days: 1));
+    return await _firestore
+        .collection('orders')
+        .where('milkManId', isEqualTo: mobile)
+        .where(
+          'createdOn',
+          isGreaterThanOrEqualTo: date,
+          isLessThanOrEqualTo: date.add(
+            Duration(hours: 23, minutes: 59),
+          ),
+        )
+        .get()
+        .then(
+          (value) => value.docs
+              .map(
+                (e) => Order.fromFirestore(e),
+              )
+              .toList(),
+        );
+  }
+
   Stream<List<Subscription>> get subscriptionsStream => _firestore
       .collection('subscription')
       .where('milkManId', isEqualTo: mobile)
@@ -63,6 +85,26 @@ class Repository {
             )
             .toList(),
       );
+
+  Future<List<Subscription>>  subscriptionsFuture()async{
+   return await _firestore
+      .collection('subscription')
+      .where('milkManId', isEqualTo: mobile)
+      .where(
+        'startDate',
+        isGreaterThanOrEqualTo: Dates.today.subtract(
+          Duration(days: 30),
+        ),
+      )
+      .get()
+      .then(
+        (value) => value.docs
+            .map(
+              (e) => Subscription.fromFirestore(e),
+            )
+            .toList(),
+      );
+  }
 
   Stream<List<Customer>> get customersStream => _firestore
       .collection('users')

@@ -19,6 +19,8 @@ dependencies:
   pinput: ^1.2.0
   carousel_slider: ^4.0.0
   table_calendar: ^3.0.1
+  syncfusion_flutter_pdf: ^19.2.55-beta
+  syncfusion_flutter_pdfviewer: ^19.2.55-beta
 
   #state management
   hooks_riverpod: ^0.14.0+4
@@ -36,6 +38,8 @@ dependencies:
   
   #device
   url_launcher: ^6.0.9
+  share: ^2.0.4
+  path_provider: ^2.0.2
 
 dev_dependencies:
   flutter_test:
