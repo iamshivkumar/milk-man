@@ -1,5 +1,3 @@
-
-
 import 'package:milk_man_app/ui/utils/labels.dart';
 
 class OrderProduct {
@@ -10,7 +8,7 @@ class OrderProduct {
   final String amount;
   final int qt;
   final String unit;
-
+  final bool isMilky;
   OrderProduct({
     required this.id,
     required this.qt,
@@ -19,9 +17,8 @@ class OrderProduct {
     required this.price,
     required this.amount,
     required this.unit,
+    required this.isMilky,
   });
-
-
 
   factory OrderProduct.fromMap(Map<String, dynamic> data) {
     return OrderProduct(
@@ -32,6 +29,7 @@ class OrderProduct {
       price: data['price'],
       qt: data['qt'],
       unit: data['unit'],
+      isMilky: data['isMilky'],
     );
   }
 
@@ -44,6 +42,7 @@ class OrderProduct {
       'price': price,
       'amount': amount,
       'unit': unit,
+      'isMilky': isMilky,
     };
   }
 

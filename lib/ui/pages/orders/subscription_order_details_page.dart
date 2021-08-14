@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:milk_man_app/core/models/delivery.dart';
 
-import 'package:milk_man_app/core/models/order_status.dart';
+import 'package:milk_man_app/core/enums/order_status.dart';
 import 'package:milk_man_app/core/models/subscription.dart';
 import 'package:milk_man_app/core/providers/repository_provider.dart';
 import 'package:milk_man_app/ui/pages/customers/providers/customer_provider.dart';

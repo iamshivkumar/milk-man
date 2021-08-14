@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:milk_man_app/core/models/order.dart';
-import 'package:milk_man_app/core/models/order_status.dart';
+import 'package:milk_man_app/core/enums/order_status.dart';
 import 'package:milk_man_app/core/providers/repository_provider.dart';
+import 'package:milk_man_app/ui/pages/profile/providers/profile_provider.dart';
 import 'package:milk_man_app/ui/utils/dates.dart';
 import 'package:milk_man_app/ui/utils/utils.dart';
 import 'package:milk_man_app/ui/widgets/tow_text_row.dart';
@@ -20,6 +21,7 @@ class OrderDetailsPage extends StatelessWidget {
     final theme = Theme.of(context);
     final style = theme.textTheme;
     final repository = context.read(repositoryProvider);
+    final profile = context.read(profileProvider).data!.value;
     return Scaffold(
       appBar: AppBar(
         title: Text('Order Details'),
@@ -66,10 +68,8 @@ class OrderDetailsPage extends StatelessWidget {
                                           if (order.status ==
                                               OrderStatus.delivered) {
                                             repository.setOrderAsReturned(
-                                              id: order.id,
-                                              customerId: order.customerId,
-                                              totalAmount: order.total +
-                                                  order.walletAmount,
+                                              milkManId: profile.id,
+                                              order: order,
                                             );
                                           } else {
                                             repository.setOrderAsCancelled(
@@ -123,7 +123,10 @@ class OrderDetailsPage extends StatelessWidget {
                                         onPressed: () {
                                           Navigator.pop(context);
                                           repository
-                                              .setOrderAsDelivered(order.id);
+                                              .setOrderAsDelivered(
+                                                milkManId: profile.id,
+                                                order: order,
+                                              );
                                           Navigator.pop(context);
                                         },
                                         child: Text("YES"),

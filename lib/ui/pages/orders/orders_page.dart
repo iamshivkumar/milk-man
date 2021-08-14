@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:milk_man_app/core/models/delivery_address.dart';
 import 'package:milk_man_app/core/models/order.dart';
 import 'package:milk_man_app/core/models/order_params.dart';
-import 'package:milk_man_app/core/models/order_status.dart';
+import 'package:milk_man_app/core/enums/order_status.dart';
 import 'package:milk_man_app/ui/pages/orders/providers/calendar_view_model_provider.dart';
 import 'package:milk_man_app/ui/pages/orders/providers/filterer_view_model_provider.dart';
 import 'package:milk_man_app/ui/pages/orders/widgets/My_calendar.dart';

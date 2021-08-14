@@ -6,7 +6,7 @@ import 'package:milk_man_app/core/models/delivery.dart';
 import 'package:milk_man_app/core/models/profile.dart';
 import 'package:milk_man_app/core/models/order.dart';
 import 'package:milk_man_app/core/models/order_params.dart';
-import 'package:milk_man_app/core/models/order_status.dart';
+import 'package:milk_man_app/core/enums/order_status.dart';
 import 'package:milk_man_app/core/models/subscription.dart';
 import 'package:milk_man_app/ui/utils/dates.dart';
 
@@ -46,7 +46,7 @@ class Repository {
     );
   }
 
-  Future<List<Order>> ordersFuture(DateTime dateTime) async{
+  Future<List<Order>> ordersFuture(DateTime dateTime) async {
     final date = dateTime.subtract(Duration(days: 1));
     return await _firestore
         .collection('orders')
@@ -86,24 +86,24 @@ class Repository {
             .toList(),
       );
 
-  Future<List<Subscription>>  subscriptionsFuture()async{
-   return await _firestore
-      .collection('subscription')
-      .where('milkManId', isEqualTo: mobile)
-      .where(
-        'startDate',
-        isGreaterThanOrEqualTo: Dates.today.subtract(
-          Duration(days: 30),
-        ),
-      )
-      .get()
-      .then(
-        (value) => value.docs
-            .map(
-              (e) => Subscription.fromFirestore(e),
-            )
-            .toList(),
-      );
+  Future<List<Subscription>> subscriptionsFuture() async {
+    return await _firestore
+        .collection('subscription')
+        .where('milkManId', isEqualTo: mobile)
+        .where(
+          'startDate',
+          isGreaterThanOrEqualTo: Dates.today.subtract(
+            Duration(days: 30),
+          ),
+        )
+        .get()
+        .then(
+          (value) => value.docs
+              .map(
+                (e) => Subscription.fromFirestore(e),
+              )
+              .toList(),
+        );
   }
 
   Stream<List<Customer>> get customersStream => _firestore
@@ -140,10 +140,19 @@ class Repository {
     batch.commit();
   }
 
-  void setOrderAsDelivered(String id) {
-    _firestore.collection('orders').doc(id).update({
+  void setOrderAsDelivered({required Order order, required String milkManId}) {
+    final double amount = order.products
+        .where((element) => element.isMilky)
+        .map((e) => e.price * e.qt)
+        .reduce((a, b) => a + b);
+    final batch = _firestore.batch();
+    batch.update(_firestore.collection('orders').doc(order.id), {
       "status": OrderStatus.delivered,
     });
+    batch.update(_firestore.collection('milkMans').doc(milkManId), {
+      'walletAmount': FieldValue.increment(amount),
+    });
+    batch.commit();
   }
 
   void setOrderAsCancelled(
@@ -160,16 +169,20 @@ class Repository {
     batch.commit();
   }
 
-  void setOrderAsReturned(
-      {required String id,
-      required String customerId,
-      required double totalAmount}) {
+  void setOrderAsReturned({required Order order, required String milkManId}) {
+    final double amount = order.products
+        .where((element) => element.isMilky)
+        .map((e) => e.price * e.qt)
+        .reduce((a, b) => a + b);
     final batch = _firestore.batch();
-    batch.update(_firestore.collection('orders').doc(id), {
+    batch.update(_firestore.collection('orders').doc(order.id), {
       "status": OrderStatus.returned,
     });
-    batch.update(_firestore.collection('users').doc(customerId), {
-      "walletAmount": FieldValue.increment(totalAmount),
+    batch.update(_firestore.collection('users').doc(order.customerId), {
+      "walletAmount": FieldValue.increment(order.price),
+    });
+    batch.update(_firestore.collection('milkMans').doc(milkManId), {
+      'walletAmount': FieldValue.increment(-amount),
     });
     batch.commit();
   }
@@ -223,35 +236,36 @@ class Repository {
 
   void returnSubscriptionOrder(
       {required Subscription subscription, required String id}) {
-    try {
-      final List<Delivery> deliveries = subscription.deliveries;
-      deliveries.where((element) => element.date == Dates.today).first.status =
-          OrderStatus.returned;
-      final _batch = _firestore.batch();
-      _batch
-          .update(_firestore.collection('subscription').doc(subscription.id), {
-        'deliveries': deliveries.map((e) => e.toMap()).toList(),
-      });
-      final amount = deliveries
-              .where((element) => element.date == Dates.today)
-              .first
-              .quantity *
-          subscription.option.salePrice;
-      _batch.update(
-        _firestore.collection('users').doc(subscription.customerId),
-        {
-          "walletAmount": FieldValue.increment(amount),
-        },
-      );
-      _batch.update(
-        _firestore.collection('milkMans').doc(id),
-        {
-          "walletAmount": FieldValue.increment(-amount),
-        },
-      );
-      _batch.commit();
-    } catch (e) {
-      print(e);
-    }
+    final List<Delivery> deliveries = subscription.deliveries;
+    deliveries.where((element) => element.date == Dates.today).first.status =
+        OrderStatus.returned;
+    final _batch = _firestore.batch();
+    _batch.update(_firestore.collection('subscription').doc(subscription.id), {
+      'deliveries': deliveries.map((e) => e.toMap()).toList(),
+    });
+    final amount = deliveries
+            .where((element) => element.date == Dates.today)
+            .first
+            .quantity *
+        subscription.option.salePrice;
+    _batch.update(
+      _firestore.collection('users').doc(subscription.customerId),
+      {
+        "walletAmount": FieldValue.increment(amount),
+      },
+    );
+    _batch.update(
+      _firestore.collection('milkMans').doc(id),
+      {
+        "walletAmount": FieldValue.increment(-amount),
+      },
+    );
+    _batch.commit();
+  }
+
+  Future<void> request({required String id, required String area}) async {
+    await _firestore.collection('milkMans').doc(id).update({
+      "areasRequests": FieldValue.arrayUnion([area]),
+    });
   }
 }

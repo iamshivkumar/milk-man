@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:milk_man_app/core/models/order.dart';
-import 'package:milk_man_app/core/models/order_status.dart';
+import 'package:milk_man_app/core/enums/order_status.dart';
 import 'package:milk_man_app/core/models/pdf_order.dart';
 import 'package:milk_man_app/core/models/subscription.dart';
 import 'package:milk_man_app/core/providers/repository_provider.dart';
@@ -54,7 +54,7 @@ class GenerateViewModel extends ChangeNotifier {
     headerRow.style.font =
         PdfStandardFont(PdfFontFamily.helvetica, 10, style: PdfFontStyle.bold);
     print("4");
-    for (var order in (pdfOrders+pdfOrders+pdfOrders+pdfOrders+pdfOrders+pdfOrders+pdfOrders+pdfOrders+pdfOrders+pdfOrders+pdfOrders+pdfOrders+pdfOrders)) {
+    for (var order in pdfOrders) {
       PdfGridRow row = grid.rows.add();
       row.cells[0].value = pdfOrders.indexOf(order).toString();
       row.cells[1].value = order.customerName;
@@ -65,9 +65,9 @@ class GenerateViewModel extends ChangeNotifier {
       row.cells[6].value = order.products.first.quantity;
       row.cells[7].value = order.total;
       row.cells[8].value = order.status;
-      row.style = PdfGridRowStyle(
-        backgroundBrush:  PdfBrushes.lightGreen
-      );
+      // row.style = PdfGridRowStyle(
+      //   backgroundBrush:  PdfBrushes.lightGreen
+      // );
       for (var product in order.products.skip(1)) {
         PdfGridRow r = grid.rows.add();
         r.cells[4].value = product.name;

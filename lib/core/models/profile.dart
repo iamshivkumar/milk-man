@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Profile {
@@ -7,31 +6,35 @@ class Profile {
   final String mobile;
   final double walletAmount;
   final List<String> areas;
-
+  final List<String> pendingAreas;
+  final List<String> rejectedAreas;
   Profile({
     required this.id,
     required this.name,
     required this.mobile,
     required this.areas,
     required this.walletAmount,
+    required this.pendingAreas,
+    required this.rejectedAreas,
   });
-  
-  
-  
 
   Profile copyWith({
     String? id,
     String? name,
     String? mobile,
     List<String>? areas,
-    double? walletAmount
+    List<String>? pendingAreas,
+    List<String>? rejectedAreas,
+    double? walletAmount,
   }) {
     return Profile(
       id: id ?? this.id,
       name: name ?? this.name,
       mobile: mobile ?? this.mobile,
       areas: areas ?? this.areas,
-      walletAmount: walletAmount??this.walletAmount
+      walletAmount: walletAmount ?? this.walletAmount,
+      pendingAreas: pendingAreas ?? this.pendingAreas,
+      rejectedAreas: rejectedAreas ?? this.rejectedAreas,
     );
   }
 
@@ -40,7 +43,9 @@ class Profile {
       'name': name,
       'mobile': mobile,
       'areas': areas,
-      'walletAmount':walletAmount
+      'walletAmount': walletAmount,
+      'areasRequests': pendingAreas,
+      'rejectedAreas': rejectedAreas,
     };
   }
 
@@ -52,6 +57,8 @@ class Profile {
       mobile: map['mobile'],
       areas: List<String>.from(map['areas']),
       walletAmount: map['walletAmount'],
+      pendingAreas: List<String>.from(map['pendingAreas']),
+      rejectedAreas: List<String>.from(map['rejectedAreas']),
     );
   }
 
@@ -62,6 +69,8 @@ class Profile {
       mobile: '',
       areas: [],
       walletAmount: 0,
+      pendingAreas: [],
+      rejectedAreas: [],
     );
   }
 }
