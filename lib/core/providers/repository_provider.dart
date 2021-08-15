@@ -265,7 +265,8 @@ class Repository {
 
   Future<void> request({required String id, required String area}) async {
     await _firestore.collection('milkMans').doc(id).update({
-      "areasRequests": FieldValue.arrayUnion([area]),
+      "pendingAreas": FieldValue.arrayUnion([area]),
     });
   }
 }
+
