@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:milk_man_app/ui/pages/area_requests/area_requests_page.dart';
+import 'package:milk_man_app/ui/pages/auth/providers/auth_view_model_provider.dart';
 import 'package:milk_man_app/ui/pages/customers/customers_page.dart';
 import 'package:milk_man_app/ui/pages/orders/orders_page.dart';
 import 'package:milk_man_app/ui/pages/pdfs/pdfs_page.dart';
 import 'package:milk_man_app/ui/pages/profile/providers/profile_provider.dart';
 import 'package:milk_man_app/ui/utils/labels.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends ConsumerWidget {
   @override
@@ -21,7 +23,7 @@ class HomePage extends ConsumerWidget {
           children: [
             ListTile(
               title: Text(profile.name),
-              subtitle: Text(profile.mobile),
+              subtitle: Text("+91" + profile.mobile),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -53,15 +55,19 @@ class HomePage extends ConsumerWidget {
                   name: "Orders Pdfs",
                   widget: PdfsPage(),
                 ),
-               
                 MyCard(
                   image: "assets/area.png",
                   name: "Areas",
                   widget: AreaRequestsPage(),
                 ),
-                
               ],
-            )
+            ),
+            TextButton(
+              onPressed: () {
+                context.read(authViewModelProvider).signOut();
+              },
+              child: Text("SIGNOUT"),
+            ),
           ],
         ),
       ),
