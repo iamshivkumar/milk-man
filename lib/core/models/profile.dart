@@ -44,7 +44,7 @@ class Profile {
       'mobile': mobile,
       'areas': areas,
       'walletAmount': walletAmount,
-      'areasRequests': pendingAreas,
+      'pendingAreas': pendingAreas,
       'rejectedAreas': rejectedAreas,
     };
   }
@@ -56,7 +56,7 @@ class Profile {
       name: map['name'],
       mobile: map['mobile'],
       areas: List<String>.from(map['areas']),
-      walletAmount: map['walletAmount'],
+      walletAmount: map['walletAmount'].toDouble(),
       pendingAreas: List<String>.from(map['pendingAreas']),
       rejectedAreas: List<String>.from(map['rejectedAreas']),
     );

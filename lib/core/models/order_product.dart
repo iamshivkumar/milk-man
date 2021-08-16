@@ -26,7 +26,7 @@ class OrderProduct {
       id: data['id'],
       image: data['image'],
       name: data['name'],
-      price: data['price'],
+      price: data['price'].toDouble(),
       qt: data['qt'],
       unit: data['unit'],
       isMilky: data['isMilky'],

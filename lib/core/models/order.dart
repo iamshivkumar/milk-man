@@ -111,8 +111,8 @@ class Order {
       customerId: map['customerId'],
       customerName: map['customerName'],
       customerMobile: map['customerMobile'],
-      price: map['price'],
-      walletAmount: map['walletAmount'],
+      price: map['price'].toDouble(),
+      walletAmount: map['walletAmount'].toDouble(),
       status: map['status'],
       products: List<OrderProduct>.from(
         map['products'].map(
@@ -125,7 +125,7 @@ class Order {
       paid: map['paid'],
       paymentId: map['paymentId'],
       createdOn: map['createdOn'].toDate(),
-      total: map['total'],
+      total: map['total'].toDouble(),
       address: DeliveryAddress.fromMap(map['address'])
     );
   }

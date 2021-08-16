@@ -70,7 +70,7 @@ class Subscription {
       customerName: customerName ?? this.customerName,
       customerMobile: customerMobile ?? this.customerMobile,
       image: image ?? this.image,
-      address: address??this.address,
+      address: address ?? this.address,
     );
   }
 
@@ -89,7 +89,7 @@ class Subscription {
       'deliveries': deliveries.map((e) => e.toMap()).toList(),
       'image': image,
       'milkManId': milkManId,
-      'address':address.toMap()
+      'address': address.toMap()
     };
   }
 
@@ -97,27 +97,24 @@ class Subscription {
     final Map<String, dynamic> map = doc.data() as Map<String, dynamic>;
     final Iterable deliveriesData = map['deliveries'];
     return Subscription(
-      customerName: map['customerName'],
-      customerMobile: map['customerMobile'],
-      id: doc.id,
-      customerId: map['customerId'],
-      productId: map['productId'],
-      productName: map['productName'],
-      option: Option.fromMap(map['option']),
-      startDate: map['startDate'].toDate(),
-      endDate: map['endDate'].toDate(),
-      deliveryDay: map['deliveryDay'],
-      // dates: datesData.map((e) => e.toDate()).toList(),
-      deliveries: deliveriesData
-          .map((e) => Delivery.fromMap(e as Map<String, dynamic>))
-          .toList(),
-      milkManId: map['milkManId'],
-      image: map['image'],
-      address: DeliveryAddress.fromMap(map['address'])
-    );
+        customerName: map['customerName'],
+        customerMobile: map['customerMobile'],
+        id: doc.id,
+        customerId: map['customerId'],
+        productId: map['productId'],
+        productName: map['productName'],
+        option: Option.fromMap(map['option']),
+        startDate: map['startDate'].toDate(),
+        endDate: map['endDate'].toDate(),
+        deliveryDay: map['deliveryDay'],
+        // dates: datesData.map((e) => e.toDate()).toList(),
+        deliveries: deliveriesData
+            .map((e) => Delivery.fromMap(e as Map<String, dynamic>))
+            .toList(),
+        milkManId: map['milkManId'],
+        image: map['image'],
+        address: DeliveryAddress.fromMap(map['address']));
   }
-
-
 }
 
 class DeliveryDay {

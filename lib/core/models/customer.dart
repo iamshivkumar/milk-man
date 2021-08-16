@@ -31,7 +31,7 @@ class Customer {
       milkManId: map['milkManId'],
       area: map['area'],
       number: map['number'],
-      walletAmount: map['walletAmount'],
+      walletAmount: map['walletAmount'].toDouble(),
       landMark: map['landMark'],
     );
   }
