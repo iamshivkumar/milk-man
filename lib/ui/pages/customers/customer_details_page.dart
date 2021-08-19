@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:milk_man_app/core/models/customer.dart';
 import 'package:milk_man_app/ui/utils/labels.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'providers/customers_provider.dart';
 import 'widgets/add_wallet_amount_sheet.dart';
@@ -51,6 +52,13 @@ class CustomerDetailsPage extends ConsumerWidget {
                 ListTile(
                   leading: Icon(Icons.person),
                   title: Text(customer.name),
+                ),
+                ListTile(
+                  onTap: (){
+                    launch('tel:${customer.mobile}');
+                  },
+                  leading: Icon(Icons.call),
+                  title: Text(customer.mobile),
                 ),
                 ListTile(
                   leading: Icon(Icons.location_pin),

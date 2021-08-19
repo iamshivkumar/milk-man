@@ -17,9 +17,9 @@ class CustomerTabs {
 class CustomersPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    final customersStream = watch(customersProvider);
+    
     final filterer = watch(filtererViewModelProvider);
-
+    final customersStream = watch(customersProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text("Customers"),

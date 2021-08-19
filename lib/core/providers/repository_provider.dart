@@ -141,10 +141,10 @@ class Repository {
   }
 
   void setOrderAsDelivered({required Order order, required String milkManId}) {
-    final double amount = order.products
+    final list = order.products
         .where((element) => element.isMilky)
-        .map((e) => e.price * e.qt)
-        .reduce((a, b) => a + b);
+        .map((e) => e.price * e.qt);
+    final double amount = list.isNotEmpty? list.reduce((a, b) => a + b):0;
     final batch = _firestore.batch();
     batch.update(_firestore.collection('orders').doc(order.id), {
       "status": OrderStatus.delivered,
@@ -170,10 +170,10 @@ class Repository {
   }
 
   void setOrderAsReturned({required Order order, required String milkManId}) {
-    final double amount = order.products
+     final list = order.products
         .where((element) => element.isMilky)
-        .map((e) => e.price * e.qt)
-        .reduce((a, b) => a + b);
+        .map((e) => e.price * e.qt);
+    final double amount = list.isNotEmpty? list.reduce((a, b) => a + b):0;
     final batch = _firestore.batch();
     batch.update(_firestore.collection('orders').doc(order.id), {
       "status": OrderStatus.returned,
@@ -269,4 +269,3 @@ class Repository {
     });
   }
 }
-

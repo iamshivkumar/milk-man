@@ -26,10 +26,13 @@ class MyApp extends ConsumerWidget {
           labelColor: Colors.black,
           unselectedLabelColor: Colors.grey,
         ),
+        buttonTheme: ButtonThemeData(
+          textTheme: ButtonTextTheme.primary,
+        ),
         primarySwatch: Colors.blue,
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(),
-        )
+        ),
       ),
       home: auth.user != null
           ? Builder(builder: (context) {

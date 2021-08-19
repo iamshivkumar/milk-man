@@ -17,17 +17,22 @@ class Filterer extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.all(2),
               child: DropdownButtonFormField<String>(
+                isExpanded: true,
                 decoration: InputDecoration(
-                    labelText: "Area",
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                    )),
+                  labelText: "Area",
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ),
+                ),
                 value: areas.contains(model.area) ? model.area : null,
                 onChanged: (v) => model.area = v,
                 items: areas
                     .map(
                       (e) => DropdownMenuItem<String>(
-                        child: Text(e),
+                        child: Text(
+                          e,
+                        ),
+
                         value: e,
                       ),
                     )
@@ -40,9 +45,9 @@ class Filterer extends ConsumerWidget {
               padding: const EdgeInsets.all(2),
               child: TextField(
                 textCapitalization: TextCapitalization.words,
-                onChanged: (v)=>model.number = v,
+                onChanged: (v) => model.number = v,
                 decoration: InputDecoration(
-                  labelText: "Number",
+                  labelText: "Flat Number",
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 16,
                   ),

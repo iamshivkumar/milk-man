@@ -9,16 +9,21 @@ class TwoTextRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(text1),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(text2,style: TextStyle(
-            color: Theme.of(context).primaryColorDark
-          ),),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              text2,
+              style: TextStyle(color: Theme.of(context).primaryColorDark),
+              textAlign: TextAlign.end,
+            ),
+          ),
         ),
       ],
     );

@@ -185,7 +185,7 @@ class OrderDetailsPage extends StatelessWidget {
                   ),
                 ),
                 TwoTextRow(
-                  text1: "Items (6)",
+                  text1: "Items (${order.items})",
                   text2: '₹' + order.price.toString(),
                 ),
                 TwoTextRow(
@@ -193,8 +193,13 @@ class OrderDetailsPage extends StatelessWidget {
                   text2: '₹' + order.walletAmount.toString(),
                 ),
                 TwoTextRow(
-                  text1: 'Total Price',
+                  text1: "Razorpay",
                   text2: '₹' + order.total.toString(),
+                ),
+                Divider(),
+                TwoTextRow(
+                  text1: 'Total Price',
+                  text2: '₹' + order.price.toString(),
                 )
               ],
             ),
