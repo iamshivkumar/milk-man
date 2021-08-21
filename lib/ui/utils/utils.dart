@@ -42,4 +42,7 @@ class Utils {
 
   static String formatedDate(DateTime dateTime) =>
       DateFormat(DateFormat.MONTH_DAY).format(dateTime);
+
+      static String formatedDateTime(DateTime dateTime) =>
+      DateFormat(DateFormat.HOUR_MINUTE).format(dateTime)+", "+formatedDate(dateTime);
 }

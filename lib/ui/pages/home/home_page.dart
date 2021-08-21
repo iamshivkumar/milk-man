@@ -6,6 +6,7 @@ import 'package:milk_man_app/ui/pages/customers/customers_page.dart';
 import 'package:milk_man_app/ui/pages/orders/orders_page.dart';
 import 'package:milk_man_app/ui/pages/pdfs/pdfs_page.dart';
 import 'package:milk_man_app/ui/pages/profile/providers/profile_provider.dart';
+import 'package:milk_man_app/ui/pages/wallet_charges/charges_page.dart';
 import 'package:milk_man_app/ui/utils/labels.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -59,6 +60,11 @@ class HomePage extends ConsumerWidget {
                   image: "assets/area.png",
                   name: "Areas",
                   widget: AreaRequestsPage(),
+                ),
+                MyCard(
+                  image: "assets/area.png",
+                  name: "Areas",
+                  widget: WalletChargesPage(),
                 ),
               ],
             ),

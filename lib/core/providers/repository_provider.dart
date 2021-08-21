@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:milk_man_app/core/models/charge.dart';
 import 'package:milk_man_app/core/models/customer.dart';
 import 'package:milk_man_app/core/models/delivery.dart';
 import 'package:milk_man_app/core/models/profile.dart';
@@ -137,6 +138,17 @@ class Repository {
     batch.update(_firestore.collection('milkMans').doc(milkManId), {
       'walletAmount': FieldValue.increment(-amount),
     });
+    batch.set(
+      _firestore.collection('charges').doc(),
+      Charge(
+        amount: amount,
+        from: milkManId,
+        to: id,
+        ids: [id,milkManId],
+        type: ChargesType.whileAddWalletAmount,
+        createdAt: DateTime.now(),
+      ).toMap(),
+    );
     batch.commit();
   }
 
@@ -144,7 +156,7 @@ class Repository {
     final list = order.products
         .where((element) => element.isMilky)
         .map((e) => e.price * e.qt);
-    final double amount = list.isNotEmpty? list.reduce((a, b) => a + b):0;
+    final double amount = list.isNotEmpty ? list.reduce((a, b) => a + b) : 0;
     final batch = _firestore.batch();
     batch.update(_firestore.collection('orders').doc(order.id), {
       "status": OrderStatus.delivered,
@@ -152,6 +164,17 @@ class Repository {
     batch.update(_firestore.collection('milkMans').doc(milkManId), {
       'walletAmount': FieldValue.increment(amount),
     });
+    batch.set(
+      _firestore.collection('charges').doc(),
+      Charge(
+        amount: amount,
+        from: null,
+        to: milkManId,
+        ids:  [milkManId],
+        type: ChargesType.whileDeliverOrder,
+        createdAt: DateTime.now(),
+      ).toMap(),
+    );
     batch.commit();
   }
 
@@ -166,14 +189,25 @@ class Repository {
     batch.update(_firestore.collection('users').doc(customerId), {
       "walletAmount": FieldValue.increment(totalAmount),
     });
+    batch.set(
+      _firestore.collection('charges').doc(),
+      Charge(
+        amount: totalAmount,
+        from: null,
+        to: customerId,
+        ids: [customerId],
+        type: ChargesType.whileCancelOrder,
+        createdAt: DateTime.now(),
+      ).toMap(),
+    );
     batch.commit();
   }
 
   void setOrderAsReturned({required Order order, required String milkManId}) {
-     final list = order.products
+    final list = order.products
         .where((element) => element.isMilky)
         .map((e) => e.price * e.qt);
-    final double amount = list.isNotEmpty? list.reduce((a, b) => a + b):0;
+    final double amount = list.isNotEmpty ? list.reduce((a, b) => a + b) : 0;
     final batch = _firestore.batch();
     batch.update(_firestore.collection('orders').doc(order.id), {
       "status": OrderStatus.returned,
@@ -181,9 +215,31 @@ class Repository {
     batch.update(_firestore.collection('users').doc(order.customerId), {
       "walletAmount": FieldValue.increment(order.price),
     });
+    batch.set(
+      _firestore.collection('charges').doc(),
+      Charge(
+        amount: order.price,
+        from: null,
+        to: order.customerId,
+        ids: [order.customerId],
+        type: ChargesType.whileReturnOrder,
+        createdAt: DateTime.now(),
+      ).toMap(),
+    );
     batch.update(_firestore.collection('milkMans').doc(milkManId), {
       'walletAmount': FieldValue.increment(-amount),
     });
+    batch.set(
+      _firestore.collection('charges').doc(),
+      Charge(
+        amount: amount,
+        from: milkManId,
+        to: null,
+        ids:[milkManId],
+        type: ChargesType.whileReturnOrder,
+        createdAt: DateTime.now(),
+      ).toMap(),
+    );
     batch.commit();
   }
 
@@ -228,6 +284,17 @@ class Repository {
           "walletAmount": FieldValue.increment(amount),
         },
       );
+      _batch.set(
+        _firestore.collection('charges').doc(),
+        Charge(
+          amount: amount,
+          from: subscription.customerId,
+          to: id,
+          ids: [id, subscription.customerId],
+          type: ChargesType.whileDeliverSubscriptionOrder,
+          createdAt: DateTime.now(),
+        ).toMap(),
+      );
       _batch.commit();
     } catch (e) {
       print(e);
@@ -260,6 +327,17 @@ class Repository {
         "walletAmount": FieldValue.increment(-amount),
       },
     );
+    _batch.set(
+      _firestore.collection('charges').doc(),
+      Charge(
+        amount: amount,
+        from: id,
+        to: subscription.customerId,
+        ids: [id, subscription.customerId],
+        type: ChargesType.whileReturnSubscriptionOrder,
+        createdAt: DateTime.now(),
+      ).toMap(),
+    );
     _batch.commit();
   }
 
@@ -267,5 +345,19 @@ class Repository {
     await _firestore.collection('milkMans').doc(id).update({
       "pendingAreas": FieldValue.arrayUnion([area]),
     });
+  }
+
+  Future<List<QueryDocumentSnapshot>> getCharges(
+      {int limit = 10,
+      DocumentSnapshot? last,
+      required String milkManId}) async {
+    Query ref = _firestore
+        .collection('charges')
+        .where("ids", arrayContains: milkManId)
+        .limit(limit);
+    if (last != null) {
+      ref = ref.startAfterDocument(last);
+    }
+    return await ref.get().then((value) => value.docs);
   }
 }
