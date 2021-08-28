@@ -62,8 +62,8 @@ class HomePage extends ConsumerWidget {
                   widget: AreaRequestsPage(),
                 ),
                 MyCard(
-                  image: "assets/area.png",
-                  name: "Areas",
+                  image: "assets/charges_history.png",
+                  name: "Wallet Charges History",
                   widget: WalletChargesPage(),
                 ),
               ],
@@ -121,7 +121,9 @@ class MyCard extends StatelessWidget {
                 name,
                 style: style.subtitle1!.copyWith(
                   fontWeight: FontWeight.bold,
+                  
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
           ],

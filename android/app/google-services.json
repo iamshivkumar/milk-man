@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "812880352237",
-    "project_id": "groceryapp-e3501",
-    "storage_bucket": "groceryapp-e3501.appspot.com"
+    "project_number": "534149151668",
+    "project_id": "kisan-nest",
+    "storage_bucket": "kisan-nest.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:812880352237:android:4b15212bc1bfa6b2104de4",
+        "mobilesdk_app_id": "1:534149151668:android:67eafb51f7fcaf7e9310e1",
         "android_client_info": {
-          "package_name": "com.shivkonade.milk_man_app"
+          "package_name": "kisannest.in.daily"
         }
       },
       "oauth_client": [
         {
-          "client_id": "812880352237-51s1f0pr9l98othqtu0c2hru7m814enb.apps.googleusercontent.com",
+          "client_id": "534149151668-binkc2sfjqoe70jslq2jr85cj573bbrl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBM-phaiw_EWacsx7DEtoYNc-pSfkgHGGM"
+          "current_key": "AIzaSyB1k8fspPcD9RY6BQWVoIGbh8n1c_PgiFM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "812880352237-51s1f0pr9l98othqtu0c2hru7m814enb.apps.googleusercontent.com",
+              "client_id": "534149151668-binkc2sfjqoe70jslq2jr85cj573bbrl.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -36,27 +36,27 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:812880352237:android:73a834bf9d130ab3104de4",
+        "mobilesdk_app_id": "1:534149151668:android:c771f5e303fc81e39310e1",
         "android_client_info": {
-          "package_name": "com.shivkumar.grocery_app"
+          "package_name": "kisannest.in.milkman"
         }
       },
       "oauth_client": [
         {
-          "client_id": "812880352237-51s1f0pr9l98othqtu0c2hru7m814enb.apps.googleusercontent.com",
+          "client_id": "534149151668-binkc2sfjqoe70jslq2jr85cj573bbrl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBM-phaiw_EWacsx7DEtoYNc-pSfkgHGGM"
+          "current_key": "AIzaSyB1k8fspPcD9RY6BQWVoIGbh8n1c_PgiFM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "812880352237-51s1f0pr9l98othqtu0c2hru7m814enb.apps.googleusercontent.com",
+              "client_id": "534149151668-binkc2sfjqoe70jslq2jr85cj573bbrl.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

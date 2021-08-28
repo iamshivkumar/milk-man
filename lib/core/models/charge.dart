@@ -49,7 +49,7 @@ class Charge {
   factory Charge.fromFirestore( DocumentSnapshot doc) {
     final Map<String, dynamic> map = doc.data() as Map<String, dynamic>;
     return Charge(
-      amount: map['amount'],
+      amount: map['amount'].toDouble(),
       from: map['from'],
       to: map['to'],
       ids: List<String>.from(map['ids']),
