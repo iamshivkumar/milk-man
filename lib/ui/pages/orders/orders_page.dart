@@ -66,12 +66,12 @@ class OrdersPage extends StatelessWidget {
 
                           final orders = watch(
                                 ordersProvider(
-                                  OrderParams(
-                                    status: e,
-                                    dateTime: calendarModel.selectedDate,
-                                  ),
+                                  calendarModel.selectedDate,
                                 ),
-                              ).data?.value ??
+                              )
+                                  .data
+                                  ?.value
+                                  .where((element) => element.status == e).toList() ??
                               [];
                           final subscriptions = watch(subscriptionsProvider)
                                   .data

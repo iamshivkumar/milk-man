@@ -21,8 +21,8 @@ class Repository {
   String get mobile =>
       user.phoneNumber!.substring(user.phoneNumber!.length - 10);
 
-  Stream<List<Order>> ordersStream(OrderParams params) {
-    final date = params.dateTime.subtract(Duration(days: 1));
+  Stream<List<Order>> ordersStream(DateTime d) {
+    final date = d.subtract(Duration(days: 1));
     return _firestore
         .collection('orders')
         .where('milkManId', isEqualTo: mobile)
@@ -33,7 +33,6 @@ class Repository {
             Duration(hours: 23, minutes: 59),
           ),
         )
-        .where('status', isEqualTo: params.status)
         .snapshots()
         .map(
       (event) {

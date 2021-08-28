@@ -18,7 +18,6 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final auth = watch(authViewModelProvider);
-
     return MaterialApp(
       title: 'Milk Man App',
       theme: ThemeData(
