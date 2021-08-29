@@ -4,6 +4,7 @@ import 'package:milk_man_app/ui/pages/orders/providers/calendar_view_model_provi
 import 'package:milk_man_app/ui/pages/orders/providers/orders_provider.dart';
 import 'package:milk_man_app/ui/pages/orders/providers/subscriptions_provider.dart';
 import 'package:milk_man_app/ui/pages/orders/widgets/My_calendar.dart';
+import 'package:milk_man_app/ui/pages/reports/widgets/product_report_card.dart';
 import 'package:milk_man_app/ui/utils/generator.dart';
 import 'package:milk_man_app/ui/widgets/loading.dart';
 
@@ -43,25 +44,7 @@ class ReportPage extends ConsumerWidget {
                     dateTime: calendarModel.selectedDate,
                   )
                       .map(
-                        (e) => ListTile(
-                          title: Text(e.name),
-                          leading: Image.network(e.image),
-                          subtitle: Column(
-                            children: e.subproducts
-                                .map(
-                                  (e) => Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(e.amount),
-                                      Text(e.pendingCount.toString()),
-                                      Text(e.deliveredCount.toString()),
-                                    ],
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
+                        (e) => ProductReportCard(product: e),
                       )
                       .toList(),
                 ),

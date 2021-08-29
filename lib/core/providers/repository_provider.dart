@@ -4,6 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:milk_man_app/core/models/charge.dart';
 import 'package:milk_man_app/core/models/customer.dart';
 import 'package:milk_man_app/core/models/delivery.dart';
+import 'package:milk_man_app/core/models/option.dart';
+import 'package:milk_man_app/core/models/order_product.dart';
 import 'package:milk_man_app/core/models/profile.dart';
 import 'package:milk_man_app/core/models/order.dart';
 import 'package:milk_man_app/core/models/order_params.dart';
@@ -143,7 +145,7 @@ class Repository {
         amount: amount,
         from: milkManId,
         to: id,
-        ids: [id,milkManId],
+        ids: [id, milkManId],
         type: ChargesType.whileAddWalletAmount,
         createdAt: DateTime.now(),
       ).toMap(),
@@ -169,7 +171,7 @@ class Repository {
         amount: amount,
         from: null,
         to: milkManId,
-        ids:  [milkManId],
+        ids: [milkManId],
         type: ChargesType.whileDeliverOrder,
         createdAt: DateTime.now(),
       ).toMap(),
@@ -180,7 +182,8 @@ class Repository {
   void setOrderAsCancelled(
       {required String id,
       required String customerId,
-      required double totalAmount}) {
+      required double totalAmount,
+      required List<OrderProduct> products}) {
     final batch = _firestore.batch();
     batch.update(_firestore.collection('orders').doc(id), {
       "status": OrderStatus.cancelled,
@@ -199,6 +202,21 @@ class Repository {
         createdAt: DateTime.now(),
       ).toMap(),
     );
+
+    for (var item in products.where((element) => !element.isMilky)) {
+      _firestore.collection('products').doc(item.id).get().then((value) {
+        final Iterable list = value.data()!['options'];
+        final List<Option> options =
+            list.map((e) => Option.fromMap(e)).toList();
+        options
+            .where((element) => element.amountLabel == item.amountLabel)
+            .first
+            .increment(item.qt);
+        _firestore.collection('products').doc(item.id).update({
+          'options': options.map((e) => e.toMap()).toList(),
+        });
+      });
+    }
     batch.commit();
   }
 
@@ -234,7 +252,7 @@ class Repository {
         amount: amount,
         from: milkManId,
         to: null,
-        ids:[milkManId],
+        ids: [milkManId],
         type: ChargesType.whileReturnOrder,
         createdAt: DateTime.now(),
       ).toMap(),

@@ -77,6 +77,7 @@ class OrderDetailsPage extends StatelessWidget {
                                               customerId: order.customerId,
                                               totalAmount: order.total +
                                                   order.walletAmount,
+                                              products: order.products,
                                             );
                                           }
                                           Navigator.pop(context);
