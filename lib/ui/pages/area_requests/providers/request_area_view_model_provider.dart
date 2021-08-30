@@ -1,6 +1,7 @@
 import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/core/providers/repository_provider.dart';
+
+import '../../../../core/providers/repository_provider.dart';
 
 final requestAreaViewModelProvider = Provider((ref)=>RequestAreaViewModel(ref));
 

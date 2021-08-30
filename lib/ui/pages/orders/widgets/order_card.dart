@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:milk_man_app/core/models/order.dart';
-import 'package:milk_man_app/ui/pages/orders/order_details_page.dart';
-import 'package:milk_man_app/ui/widgets/tow_text_row.dart';
+
+import '../../../../core/models/order.dart';
+import '../../../widgets/tow_text_row.dart';
+import '../order_details_page.dart';
 
 class OrderCard extends StatelessWidget {
   final Order order;

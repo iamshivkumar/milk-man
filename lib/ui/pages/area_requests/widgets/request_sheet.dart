@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/core/providers/key_provider.dart';
-import 'package:milk_man_app/ui/pages/area_requests/providers/request_area_view_model_provider.dart';
+
+import '../../../../core/providers/key_provider.dart';
+import '../providers/request_area_view_model_provider.dart';
 
 class RequestSheet extends ConsumerWidget {
   final String id;

@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:milk_man_app/core/models/subscription.dart';
-import 'package:milk_man_app/ui/pages/orders/subscription_order_details_page.dart';
-import 'package:milk_man_app/ui/utils/labels.dart';
+
+import '../../../../core/models/subscription.dart';
+import '../subscription_order_details_page.dart';
 
 class ScheduleCard extends StatelessWidget {
   final Subscription subscription;

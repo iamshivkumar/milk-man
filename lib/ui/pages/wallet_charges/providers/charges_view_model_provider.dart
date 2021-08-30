@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/core/models/charge.dart';
-import 'package:milk_man_app/core/models/profile.dart';
-import 'package:milk_man_app/core/providers/repository_provider.dart';
-import 'package:milk_man_app/ui/pages/profile/providers/profile_provider.dart';
+
+import '../../../../core/models/charge.dart';
+import '../../../../core/models/profile.dart';
+import '../../../../core/providers/repository_provider.dart';
+import '../../profile/providers/profile_provider.dart';
 
 final chargesViewModelProvider = ChangeNotifierProvider<ChargesViewModel>(
   (ref) {

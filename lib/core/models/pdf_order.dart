@@ -1,6 +1,5 @@
-import 'package:milk_man_app/core/models/order.dart';
-import 'package:milk_man_app/core/models/subscription.dart';
-import 'package:milk_man_app/ui/utils/labels.dart';
+import 'order.dart';
+import 'subscription.dart';
 
 class PdfOrder {
   final String customerName;

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/ui/utils/dates.dart';
+
+import '../../../utils/dates.dart';
 
 final calendarViewModelProvider =
     ChangeNotifierProvider.autoDispose<CalendarViewModel>((ref) => CalendarViewModel());

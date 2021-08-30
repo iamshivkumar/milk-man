@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:milk_man_app/core/models/report_product.dart';
+import '../../../../core/models/report_product.dart';
 
 class ProductReportCard extends StatelessWidget {
   final ReportProduct product;

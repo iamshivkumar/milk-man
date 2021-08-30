@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/core/models/profile.dart';
+import '../../../../core/models/profile.dart';
 
-import 'package:milk_man_app/core/providers/key_provider.dart';
-import 'package:milk_man_app/core/providers/repository_provider.dart';
-import 'package:milk_man_app/ui/pages/profile/providers/profile_provider.dart';
-import 'package:milk_man_app/ui/utils/labels.dart';
+import '../../../../core/providers/key_provider.dart';
+import '../../../../core/providers/repository_provider.dart';
+import '../../profile/providers/profile_provider.dart';
+import '../../../utils/labels.dart';
 
 class AddWalletAmountSheet extends ConsumerWidget {
   final String id;

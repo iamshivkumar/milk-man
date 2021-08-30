@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/ui/pages/profile/providers/profile_provider.dart';
+
+import '../../profile/providers/profile_provider.dart';
 
 final filtererViewModelProvider =
     ChangeNotifierProvider((ref) => FiltererViewModel(ref));

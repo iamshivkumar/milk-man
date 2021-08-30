@@ -1,4 +1,4 @@
-import 'package:milk_man_app/ui/utils/labels.dart';
+import '../../ui/utils/labels.dart';
 
 class Option {
   final String amount;

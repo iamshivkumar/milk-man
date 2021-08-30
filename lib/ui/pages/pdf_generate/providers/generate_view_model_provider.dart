@@ -3,15 +3,14 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/core/models/order.dart';
-import 'package:milk_man_app/core/enums/order_status.dart';
-import 'package:milk_man_app/core/models/pdf_order.dart';
-import 'package:milk_man_app/core/models/subscription.dart';
-import 'package:milk_man_app/core/providers/repository_provider.dart';
-import 'package:milk_man_app/ui/pages/pdfs/providers/path_giver.dart';
-import 'package:milk_man_app/ui/utils/utils.dart';
-
 import 'package:syncfusion_flutter_pdf/pdf.dart';
+
+import '../../../../core/models/order.dart';
+import '../../../../core/models/pdf_order.dart';
+import '../../../../core/models/subscription.dart';
+import '../../../../core/providers/repository_provider.dart';
+import '../../../utils/utils.dart';
+import '../../pdfs/providers/path_giver.dart';
 
 final generateViewModelProvider = ChangeNotifierProvider((ref)=>GenerateViewModel(ref));
 

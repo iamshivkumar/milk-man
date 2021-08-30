@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/ui/pages/profile/providers/profile_provider.dart';
-import 'package:milk_man_app/ui/utils/labels.dart';
-import 'package:milk_man_app/ui/utils/utils.dart';
 
+import '../../utils/labels.dart';
+import '../../utils/utils.dart';
 import '../../widgets/loading.dart';
+import '../profile/providers/profile_provider.dart';
 import 'providers/charges_view_model_provider.dart';
 
 class WalletChargesPage extends ConsumerWidget {

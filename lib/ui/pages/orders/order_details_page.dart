@@ -2,14 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'package:milk_man_app/core/models/order.dart';
-import 'package:milk_man_app/core/enums/order_status.dart';
-import 'package:milk_man_app/core/providers/repository_provider.dart';
-import 'package:milk_man_app/ui/pages/profile/providers/profile_provider.dart';
-import 'package:milk_man_app/ui/utils/dates.dart';
-import 'package:milk_man_app/ui/utils/utils.dart';
-import 'package:milk_man_app/ui/widgets/tow_text_row.dart';
-
+import '../../../core/enums/order_status.dart';
+import '../../../core/models/order.dart';
+import '../../../core/providers/repository_provider.dart';
+import '../../utils/dates.dart';
+import '../../utils/utils.dart';
+import '../../widgets/tow_text_row.dart';
+import '../profile/providers/profile_provider.dart';
 import 'widgets/white_card.dart';
 
 class OrderDetailsPage extends StatelessWidget {

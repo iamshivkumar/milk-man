@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:milk_man_app/ui/utils/labels.dart';
+
+import '../../ui/utils/labels.dart';
 
 class Tranzaction {
   final String id;

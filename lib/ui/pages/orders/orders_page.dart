@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/core/models/delivery_address.dart';
-import 'package:milk_man_app/core/models/order.dart';
-import 'package:milk_man_app/core/models/order_params.dart';
-import 'package:milk_man_app/core/enums/order_status.dart';
-import 'package:milk_man_app/ui/pages/orders/providers/calendar_view_model_provider.dart';
-import 'package:milk_man_app/ui/pages/orders/providers/filterer_view_model_provider.dart';
-import 'package:milk_man_app/ui/pages/orders/widgets/My_calendar.dart';
-import 'package:milk_man_app/ui/pages/orders/widgets/filterer.dart';
-import 'package:milk_man_app/ui/pages/orders/widgets/order_card.dart';
-import 'package:milk_man_app/ui/pages/orders/widgets/schedule_card.dart';
 
+import '../../../core/enums/order_status.dart';
+import '../../../core/models/delivery_address.dart';
+import '../../../core/models/order.dart';
+import 'providers/calendar_view_model_provider.dart';
+import 'providers/filterer_view_model_provider.dart';
 import 'providers/orders_provider.dart';
 import 'providers/subscriptions_provider.dart';
+import 'widgets/My_calendar.dart';
+import 'widgets/filterer.dart';
+import 'widgets/order_card.dart';
+import 'widgets/schedule_card.dart';
 
 class OrdersPage extends StatelessWidget {
   @override

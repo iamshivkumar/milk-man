@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/ui/pages/orders/providers/calendar_view_model_provider.dart';
-import 'package:milk_man_app/ui/pages/orders/providers/orders_provider.dart';
-import 'package:milk_man_app/ui/pages/orders/providers/subscriptions_provider.dart';
-import 'package:milk_man_app/ui/pages/orders/widgets/My_calendar.dart';
-import 'package:milk_man_app/ui/pages/reports/widgets/product_report_card.dart';
-import 'package:milk_man_app/ui/utils/generator.dart';
-import 'package:milk_man_app/ui/widgets/loading.dart';
+import '../orders/providers/calendar_view_model_provider.dart';
+import '../orders/providers/orders_provider.dart';
+import '../orders/providers/subscriptions_provider.dart';
+import '../orders/widgets/My_calendar.dart';
+import 'widgets/product_report_card.dart';
+import '../../utils/generator.dart';
+import '../../widgets/loading.dart';
 
 class ReportPage extends ConsumerWidget {
   @override

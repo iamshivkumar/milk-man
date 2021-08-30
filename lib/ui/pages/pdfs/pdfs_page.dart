@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/ui/pages/pdf_generate/providers/generate_view_model_provider.dart';
-import 'package:milk_man_app/ui/pages/pdfs/pdf_vew_page.dart';
-import 'package:milk_man_app/ui/pages/pdfs/providers/files_provider.dart';
-import 'package:milk_man_app/ui/utils/dates.dart';
-import 'package:milk_man_app/ui/widgets/loading.dart';
 import 'package:share/share.dart';
+
+import '../../utils/dates.dart';
+import '../../widgets/loading.dart';
+import '../pdf_generate/providers/generate_view_model_provider.dart';
+import 'pdf_vew_page.dart';
+import 'providers/files_provider.dart';
 
 class PdfsPage extends ConsumerWidget {
   @override

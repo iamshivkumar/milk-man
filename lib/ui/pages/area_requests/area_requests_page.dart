@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/ui/pages/area_requests/widgets/request_sheet.dart';
-import 'package:milk_man_app/ui/pages/profile/providers/profile_provider.dart';
-import 'package:milk_man_app/ui/widgets/loading.dart';
+
+import '../../widgets/loading.dart';
+import '../profile/providers/profile_provider.dart';
+import 'widgets/request_sheet.dart';
 
 class AreaRequestsPage extends ConsumerWidget {
   @override

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/ui/pages/customers/customer_details_page.dart';
-import 'package:milk_man_app/ui/pages/customers/providers/customers_provider.dart';
-import 'package:milk_man_app/ui/pages/orders/providers/filterer_view_model_provider.dart';
-import 'package:milk_man_app/ui/pages/orders/widgets/filterer.dart';
-import 'package:milk_man_app/ui/utils/labels.dart';
-import 'package:milk_man_app/ui/widgets/loading.dart';
+
+import '../../utils/labels.dart';
+import '../../widgets/loading.dart';
+import '../orders/providers/filterer_view_model_provider.dart';
+import '../orders/widgets/filterer.dart';
+import 'customer_details_page.dart';
+import 'providers/customers_provider.dart';
 
 class CustomerTabs {
   static String get lessThan50 => "Less than ${Labels.rupee}50";

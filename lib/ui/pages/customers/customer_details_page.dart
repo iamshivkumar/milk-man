@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/core/models/customer.dart';
-import 'package:milk_man_app/ui/utils/labels.dart';
+import '../../../core/models/customer.dart';
+import '../../utils/labels.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'providers/customers_provider.dart';

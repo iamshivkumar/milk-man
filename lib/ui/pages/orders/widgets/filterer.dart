@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/ui/pages/orders/providers/filterer_view_model_provider.dart';
-import 'package:milk_man_app/ui/pages/profile/providers/profile_provider.dart';
+import '../providers/filterer_view_model_provider.dart';
+import '../../profile/providers/profile_provider.dart';
 
 class Filterer extends ConsumerWidget {
   @override

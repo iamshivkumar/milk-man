@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/core/models/file_model.dart';
-import 'package:milk_man_app/ui/pages/pdfs/providers/path_giver.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../../../../core/models/file_model.dart';
+import 'path_giver.dart';
 
 final filesProvider = FutureProvider<List<FileModel>>((ref)async{
    final List<FileModel> files = [];

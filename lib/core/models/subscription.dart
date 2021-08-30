@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:milk_man_app/core/models/delivery.dart';
-import 'package:milk_man_app/core/models/delivery_address.dart';
 
-import 'package:milk_man_app/core/models/option.dart';
+import 'delivery.dart';
+import 'delivery_address.dart';
+import 'option.dart';
 
 class Subscription {
   final String id;

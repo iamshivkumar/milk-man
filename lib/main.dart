@@ -1,12 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/ui/pages/auth/admin_login_page.dart';
-import 'package:milk_man_app/ui/pages/auth/providers/auth_view_model_provider.dart';
-import 'package:milk_man_app/ui/pages/profile/providers/profile_provider.dart';
-import 'package:milk_man_app/ui/widgets/loading.dart';
 
+import 'ui/pages/auth/admin_login_page.dart';
+import 'ui/pages/auth/providers/auth_view_model_provider.dart';
 import 'ui/pages/home/home_page.dart';
+import 'ui/pages/profile/providers/profile_provider.dart';
+import 'ui/widgets/loading.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

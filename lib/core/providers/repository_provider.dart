@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:milk_man_app/core/models/charge.dart';
-import 'package:milk_man_app/core/models/customer.dart';
-import 'package:milk_man_app/core/models/delivery.dart';
-import 'package:milk_man_app/core/models/option.dart';
-import 'package:milk_man_app/core/models/order_product.dart';
-import 'package:milk_man_app/core/models/profile.dart';
-import 'package:milk_man_app/core/models/order.dart';
-import 'package:milk_man_app/core/models/order_params.dart';
-import 'package:milk_man_app/core/enums/order_status.dart';
-import 'package:milk_man_app/core/models/subscription.dart';
-import 'package:milk_man_app/ui/utils/dates.dart';
+
+import '../../ui/utils/dates.dart';
+import '../enums/order_status.dart';
+import '../models/amount_param.dart';
+import '../models/charge.dart';
+import '../models/customer.dart';
+import '../models/delivery.dart';
+import '../models/option.dart';
+import '../models/order.dart';
+import '../models/order_product.dart';
+import '../models/profile.dart';
+import '../models/subscription.dart';
 
 final repositoryProvider = Provider<Repository>((ref) => Repository());
 
@@ -376,5 +377,21 @@ class Repository {
       ref = ref.startAfterDocument(last);
     }
     return await ref.get().then((value) => value.docs);
+  }
+
+  Stream<List<Charge>> chargesStream({required String milkManId,required String viewType}) {
+    final AmountParam param = AmountParam.fromViewType(viewType);
+    return _firestore
+        .collection('charges')
+        .where("ids", arrayContains: milkManId)
+        .where('createdAt',isGreaterThanOrEqualTo: param.start,isLessThanOrEqualTo: param.end)
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map(
+                (e) => Charge.fromFirestore(e),
+              )
+              .toList(),
+        );
   }
 }

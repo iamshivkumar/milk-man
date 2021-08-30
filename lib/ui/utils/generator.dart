@@ -1,7 +1,7 @@
-import 'package:milk_man_app/core/enums/order_status.dart';
-import 'package:milk_man_app/core/models/order.dart';
-import 'package:milk_man_app/core/models/report_product.dart';
-import 'package:milk_man_app/core/models/subscription.dart';
+import '../../core/enums/order_status.dart';
+import '../../core/models/order.dart';
+import '../../core/models/report_product.dart';
+import '../../core/models/subscription.dart';
 
 class Generator {
   static List<ReportProduct> reportProducts({

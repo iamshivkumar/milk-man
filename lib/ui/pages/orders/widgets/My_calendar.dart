@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:milk_man_app/ui/pages/orders/providers/calendar_view_model_provider.dart';
-import 'package:milk_man_app/ui/utils/dates.dart';
-import 'package:milk_man_app/ui/utils/utils.dart';
-
 import 'package:table_calendar/table_calendar.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../utils/dates.dart';
+import '../../../utils/utils.dart';
+import '../providers/calendar_view_model_provider.dart';
 
 class MyCalendar extends StatelessWidget {
   const MyCalendar({

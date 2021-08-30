@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:milk_man_app/core/models/file_model.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+
+import '../../../core/models/file_model.dart';
 
 class PdfViewPage extends StatelessWidget {
   final FileModel fileModel;

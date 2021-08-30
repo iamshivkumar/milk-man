@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:milk_man_app/core/models/delivery_address.dart';
 
+import 'delivery_address.dart';
 import 'order_product.dart';
 
 class Order {
