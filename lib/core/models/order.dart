@@ -5,16 +5,16 @@ import 'order_product.dart';
 
 class Order {
   final String id;
-
+    final String orderId;
   final String customerId;
   final String customerName;
   final String customerMobile;
-
 
   final double price;
   final double walletAmount;
   final double total;
   final String status;
+    final bool packed;
 
   final List<OrderProduct> products;
   final int items;
@@ -24,6 +24,7 @@ class Order {
   final String? paymentId;
   final DateTime createdOn;
   final DeliveryAddress address;
+  final String? refundReason;
 
   DateTime get deliveryDate => createdOn.add(Duration(days: 1));
 
@@ -44,65 +45,12 @@ class Order {
     this.paymentId,
     required this.createdOn,
     required this.address,
+    this.refundReason,
+    required this.packed,
+    required this.orderId,
   });
 
-  Order copyWith({
-    String? id,
-    String? customerId,
-    String? customerName,
-    String? customerMobile,
-    double? price,
-    double? walletAmount,
-    String? status,
-    List<OrderProduct>? products,
-    int? items,
-    String? milkManId,
-    String? paymentMethod,
-    bool? paid,
-    String? paymentId,
-    DateTime? createdOn,
-    double? total,
-    DeliveryAddress? address,
-  }) {
-    return Order(
-      id: id ?? this.id,
-      customerId: customerId ?? this.customerId,
-      customerName: customerName ?? this.customerName,
-      customerMobile: customerMobile ?? this.customerMobile,
-      price: price ?? this.price,
-      walletAmount: walletAmount ?? this.walletAmount,
-      status: status ?? this.status,
-      products: products ?? this.products,
-      items: items ?? this.items,
-      milkManId: milkManId ?? this.milkManId,
-      paymentMethod: paymentMethod ?? this.paymentMethod,
-      paid: paid ?? this.paid,
-      paymentId: paymentId ?? this.paymentId,
-      createdOn: createdOn ?? this.createdOn,
-      total: total ?? this.total,
-      address: address??this.address,
-    );
-  }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'customerId': customerId,
-      'customerName': customerName,
-      'customerMobile': customerMobile,
-      'price': price,
-      'walletAmount': walletAmount,
-      'status': status,
-      'products': products.map((x) => x.toMap()).toList(),
-      'items': items,
-      'milkManId': milkManId,
-      'paymentMethod': paymentMethod,
-      'paid': paid,
-      'paymentId': paymentId,
-      'createdOn': Timestamp.fromDate(createdOn),
-      'total': total,
-      'address': address.toMap(),
-    };
-  }
 
   factory Order.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> map = doc.data() as Map<String, dynamic>;
@@ -126,7 +74,10 @@ class Order {
       paymentId: map['paymentId'],
       createdOn: map['createdOn'].toDate(),
       total: map['total'].toDouble(),
-      address: DeliveryAddress.fromMap(map['address'])
+      address: DeliveryAddress.fromMap(map['address']),
+      refundReason: map['refundReason'],
+      packed: map['packed'],
+      orderId: map['orderId']
     );
   }
 }

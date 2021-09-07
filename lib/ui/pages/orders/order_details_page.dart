@@ -122,11 +122,10 @@ class OrderDetailsPage extends StatelessWidget {
                                         color: theme.accentColor,
                                         onPressed: () {
                                           Navigator.pop(context);
-                                          repository
-                                              .setOrderAsDelivered(
-                                                milkManId: profile.id,
-                                                order: order,
-                                              );
+                                          repository.setOrderAsDelivered(
+                                            milkManId: profile.id,
+                                            order: order,
+                                          );
                                           Navigator.pop(context);
                                         },
                                         child: Text("YES"),
@@ -241,6 +240,9 @@ class OrderDetailsPage extends StatelessWidget {
                   text1: "Status",
                   text2: order.status,
                 ),
+                order.refundReason != null
+                    ? TwoTextRow(text1: "Reason", text2: order.refundReason!)
+                    : SizedBox(),
                 TwoTextRow(
                   text1: "Delivery Date",
                   text2: Utils.formatedDate(order.deliveryDate),

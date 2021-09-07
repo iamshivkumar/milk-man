@@ -14,43 +14,62 @@ class OrderCard extends StatelessWidget {
     final theme = Theme.of(context);
     final style = theme.textTheme;
     return Card(
-      child: InkWell(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => OrderDetailsPage(
-              key: Key(order.id),
-              order: order,
+      child: Stack(
+        children: [
+          InkWell(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OrderDetailsPage(
+                  key: Key(order.id),
+                  order: order,
+                ),
+              ),
+            ),
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text(order.customerName),
+                  subtitle: Text(order.address.formated),
+                  trailing: Text(
+                    "ORDER: ${order.orderId}",
+                    style: style.overline,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                  child: Column(
+                    children: [
+                      TwoTextRow(
+                        text1: "Items",
+                        text2: "${order.items} Items purchased",
+                      ),
+                      TwoTextRow(
+                        text1: "Price",
+                        text2: "₹" + order.total.toString(),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-        child: Column(
-          children: [
-            ListTile(
-              title: Text(order.customerName),
-              subtitle: Text(order.address.formated),
-              trailing: Text(
-                "ORDER",
-                style: style.overline,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-              child: Column(
-                children: [
-                  TwoTextRow(
-                    text1: "Items",
-                    text2: "${order.items} Items purchased",
+          order.packed
+              ? Positioned(
+                  right: 0,
+                  child: Material(
+                    color: theme.primaryColorLight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Text(
+                        "Packed",
+                        style: style.overline,
+                      ),
+                    ),
                   ),
-                  TwoTextRow(
-                    text1: "Price",
-                    text2: "₹" + order.total.toString(),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+                )
+              : SizedBox()
+        ],
       ),
     );
   }
